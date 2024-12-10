@@ -89,7 +89,7 @@ Hệ thống quản lý cửa hàng Apple Store giúp tối ưu hóa các quy tr
    - Thực hiện các bước sau để thiết lập cơ sở dữ liệu:  
      1. **Tạo cơ sở dữ liệu mới**:
         - Nhấn **New** trong menu bên trái.
-        - Nhập tên cơ sở dữ liệu, ví dụ: `apple_store`.
+        - Nhập tên cơ sở dữ liệu: `nhom13`.
         - Chọn **Collation** là `utf8_general_ci` và nhấn **Create**.
      2. **Import tệp dữ liệu**:
         - Chọn cơ sở dữ liệu vừa tạo trong danh sách bên trái.
