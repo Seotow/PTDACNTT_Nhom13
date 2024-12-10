@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý đơn hàng</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/stylesheets/base.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+</head>
+<body>
+    <%- include('../menu') %>
+
+    <div class="admin-main">
+        <%- include('../topbar') %>
+        
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Quản lý đơn hàng</h4>
+                <div class="table-responsive">
+                    <table class="table-form">
+                        <thead>
+                            <tr>
+                                <th class="table-form-thead">Mã đơn</th>
+                                <th class="table-form-thead">Tên người nhận</th>
+                                <th class="table-form-thead">SĐT</th>
+                                <th class="table-form-thead">Địa chỉ</th>
+                                <th class="table-form-thead">Ghi chú</th>
+                                <th class="table-form-thead">Ngày tạo</th>
+                                <th class="table-form-thead">Trạng thái</th>
+                                <th class="table-form-thead">Tổng tiền</th>
+                                <th class="table-form-thead">Duyệt đơn</th>
+                                <th class="table-form-thead">Hủy đơn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (bills && bills.length) { %>
+                                <% bills.forEach(bill => { %>
+                                    <tr class="clickable-row" data-href="/bills/details/<%= bill.id %>">
+                                        <td class="table-form-item"><%= bill.id %></td>
+                                        <td class="table-form-item"><%= bill.receiver_name %></td>
+                                        <td class="table-form-item"><%= bill.receiver_phone %></td>
+                                        <td class="table-form-item"><%= bill.receiver_address %></td>
+                                        <td class="table-form-item"><%= bill.note || "Không có" %></td>
+                                        <td class="table-form-item date"><%= bill.created_at %></td>
+                                        <td class="table-form-item">
+                                            <% if (bill.status === 0) { %>
+                                                Chờ duyệt
+                                            <% } else if (bill.status === 1) { %>
+                                                Đã duyệt
+                                            <% } else if (bill.status === -1) { %>
+                                                Đã hủy
+                                            <% } %>
+                                        </td>
+                                        <td class="table-form-item price"><%= bill.total_price %></td>
+                                        <% if (bill.status === 0) { %>
+                                        <td class="table-form-item">
+                                             <!-- Form duyệt đơn hàng -->
+                                             <form action="/bills/approve/<%= bill.id %>" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn duyệt đơn này?');">
+                                                <button type="submit" class="approve-link">Duyệt đơn</button>
+                                            </form>
+                                        </td>
+                                        <td class="table-form-item">
+                                            <!-- Form hủy đơn hàng -->
+                                            <form action="/bills/cancel/<%= bill.id %>" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn này?');">
+                                                <button type="submit" class="cancel-link">Hủy đơn</button>
+                                            </form>
+                                        </td>
+                                        <% } %>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr><td colspan="11">Không có đơn hàng</td></tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast"></div>
+
+    <script src="/javascripts/toast.js"></script>
+    <script src="/javascripts/convertDate.js"></script>
+    <script src="/javascripts/convertPrice.js"></script>
+    <script src="/javascripts/admin.js"></script>
+
+    <%- include('../../message.ejs') %>
+</body>
+</html>
