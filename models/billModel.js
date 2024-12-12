@@ -98,10 +98,10 @@ const updateBillStatus = (billId, status, callback) => {
         callback(null, result);
     })
 }
-const createBill = (customer_id, receiver_name, receiver_phone, receiver_address, note, total_price, callback) => {
+const createBill = ({customer_id, receiver_name, receiver_phone, receiver_address, note, status, total_price}, callback) => {
     //Create bill, set default status to 0 (pending)
-    const billQuery = `INSERT INTO bills (customer_id, receiver_name, receiver_phone, receiver_address, note, status, total_price) VALUES (?, ?, ?, ?, ?, 0, ?)`;
-    db.query(billQuery, [customer_id, receiver_name, receiver_phone, receiver_address, note, total_price], (err, result) => {
+    const billQuery = `INSERT INTO bills (customer_id, receiver_name, receiver_phone, receiver_address, note, status, total_price) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    db.query(billQuery, [customer_id, receiver_name, receiver_phone, receiver_address, note, status, total_price], (err, result) => {
         if (err) {
             console.log(err)
             return callback(err);
@@ -110,7 +110,7 @@ const createBill = (customer_id, receiver_name, receiver_phone, receiver_address
     });
 };
 
-const createBillDetails = (bill_id, cartItems, callback) => {
+const createBillDetails = ({bill_id, cartItems}, callback) => {
     const detailsBillsQuery = `INSERT INTO details_bills (bill_id, product_id, quantity) VALUES ?`;
     const detailsBillsValues = cartItems.map(item => [bill_id, item.productId, item.buyQuantity]);
     db.query(detailsBillsQuery, [detailsBillsValues], (err) => {

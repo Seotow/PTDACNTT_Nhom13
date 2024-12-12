@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý tài khoản</title>
+    <title>Quản lý khách hàng</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -19,13 +19,13 @@
         <!-- Include topbar -->
         <%- include('../topbar') %>
         
-        <!-- Card for account management -->
+        <!-- Card for customer management -->
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Quản lý nhân viên</h4>
+                <h4 class="card-title">Quản lý khách hàng</h4>
                 <p class="card-description">
-                    <a class="card-add" href="staffs/add">
-                        Thêm nhân viên
+                    <a class="card-add" href="customers/add">
+                        Thêm khách hàng
                     </a>
                 </p>
                 <div class="table-responsive">
@@ -36,30 +36,28 @@
                                 <th class="table-form-thead">Tên</th>
                                 <th class="table-form-thead">Giới tính</th>
                                 <th class="table-form-thead">Ngày sinh</th>
-                                <th class="table-form-thead">Số điện thoại</th>
-                                <th class="table-form-thead">Địa chỉ</th>
+                                <th class="table-form-thead">Điện thoại</th>
                                 <th class="table-form-thead">Email</th>
-                                <th class="table-form-thead">Cấp bậc</th>
+                                <th class="table-form-thead">Địa chỉ</th>
                                 <th class="table-form-thead">Sửa</th>
                                 <th class="table-form-thead">Xóa</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <% staffs.forEach(staff => { %>
+                            <% customers.forEach(customer => { %>
                                 <tr>
-                                    <td class="table-form-item"><%= staff.id %></td>
-                                    <td class="table-form-item"><%= staff.name %></td>
-                                    <td class="table-form-item"><%= staff.gender === 0 ? 'Nữ' : 'Nam' %></td>
-                                    <td class="table-form-item"><%= staff.birthdate %></td>
-                                    <td class="table-form-item"><%= staff.phone %></td>
-                                    <td class="table-form-item"><%= staff.address %></td>
-                                    <td class="table-form-item"><%= staff.email %></td>
-                                    <td class="table-form-item"><%= (staff.level == 1) ? "Quản lý" : "Nhân viên" %></td>
+                                    <td class="table-form-item"><%= customer.id %></td>
+                                    <td class="table-form-item"><%= customer.name %></td>
+                                    <td class="table-form-item"><%= customer.gender === 0 ? 'Nữ' : 'Nam' %></td>
+                                    <td class="table-form-item"><%= customer.birthdate %></td>
+                                    <td class="table-form-item"><%= customer.phone %></td>
+                                    <td class="table-form-item"><%= customer.email %></td>
+                                    <td class="table-form-item"><%= customer.address %></td>
                                     <td class="table-form-item">
-                                        <a href="staffs/edit/<%= staff.id %>" class="edit-link"><i class="fas fa-edit"></i> Sửa</a>
+                                        <a href="customers/edit/<%= customer.id %>" class="edit-link"><i class="fas fa-edit"></i> Sửa</a>
                                     </td>
                                     <td class="table-form-item">
-                                        <form action="/staffs/delete/<%= staff.id %>" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa nhân viên này không?');">
+                                        <form action="/customers/delete/<%= customer.id %>" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa khách hàng này không?');">
                                             <button type="submit" class="delete-link" style="background: none; border: none; color: inherit; cursor: pointer;">
                                                 <i class="fas fa-trash"></i> Xóa
                                             </button>

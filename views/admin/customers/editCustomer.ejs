@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sửa tài khoản nhân viên</title>
+    <title>Sửa thông tin khách hàng</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -17,45 +17,40 @@
 
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Quản lý nhân viên > Sửa</h4>
+                <h4 class="card-title">Quản lý khách hàng > Sửa</h4>
                 <div class="table-responsive">
-                    <form action="../edit/<%= staff.id %>" id="form_update-staff" class="table-form" method="post">
+                    <form action="/customers/edit/<%= customer.id %>" id="form_update-customer" class="table-form" method="post">
                         <div class="form-group table-form-group">
-                            <label for="name">Tên nhân viên</label>
-                            <input rules="required" class="form-control" type="text" name="name" id="name" value="<%= staff.name %>">
+                            <label for="name">Tên khách hàng</label>
+                            <input rules="required" class="form-control" type="text" name="name" id="name" value="<%= customer.name %>">
                             <span class="form-message"></span>
                         </div>
                         <div class="form-group table-form-group">
                             <label for="gender">Giới tính</label>
                             <select name="gender" id="gender" class="form-control">
-                                <option value="1" <% if (staff.gender === 1) { %> selected <% } %> >Nam</option>
-                                <option value="0" <% if (staff.gender === 0) { %> selected <% } %> >Nữ </option>
+                                <option value="1" <% if (customer.gender === 1) { %> selected <% } %> >Nam</option>
+                                <option value="0" <% if (customer.gender === 0) { %> selected <% } %> >Nữ </option>
                             </select>
                         </div>
                         <div class="form-group table-form-group">
                             <label for="birthdate">Ngày sinh</label>
-                            <% console.log(staff) %>
-                            <input class="form-control" type="date" name="birthdate" id="birthdate" value="<%= staff.birthdate %>">
+                            <input class="form-control" type="date" name="birthdate" id="birthdate" value="<%= customer.birthdate %>">
                         </div>
                         <div class="form-group table-form-group">
                             <label for="phone">Số điện thoại</label>
-                            <input rules="required" class="form-control" type="text" name="phone" id="phone" value="<%= staff.phone %>">
+                            <input rules="required" class="form-control" type="text" name="phone" id="phone" value="<%= customer.phone %>">
                             <span class="form-message"></span>
                         </div>
                         <div class="form-group table-form-group">
                             <label for="address">Địa chỉ</label>
-                            <input class="form-control" type="text" name="address" id="address" value="<%= staff.address %>">
+                            <input class="form-control" type="text" name="address" id="address" value="<%= customer.address %>">
                         </div>
                         <div class="form-group table-form-group">
                             <label for="email">Email</label>
-                            <input class="form-control" type="email" name="email" id="email" value="<%= staff.email %>">
-                        </div>
-                        <div class="form-group table-form-group">
-                            <label for="password">Password</label>
-                            <input class="form-control" type="password" name="password" id="password" value="<%= staff.password %>">
+                            <input class="form-control" type="email" name="email" id="email" value="<%= customer.email %>">
                         </div>
                         <button type="submit" class="btn btn-primary">Sửa</button>
-                        <a class="btn btn-secondary" href="../../staffs">Hủy</a>
+                        <a class="btn btn-secondary" href="../../customers">Hủy</a>
                     </form>
                 </div>
             </div>
@@ -67,7 +62,7 @@
         <script src="/javascripts/toast.js"></script>
 
         <script>
-            // Validator('#form_update-staff')
+            // Validator('#form_update-customer')
         </script>
     </div>
 </body>

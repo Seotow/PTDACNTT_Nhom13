@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo hóa đơn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/base.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+</head>
+<body>
+    <%- include('../menu') %>
+
+    <div class="admin-main">
+        <%- include('../topbar') %>
+        
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Tạo hóa đơn</h4>
+                <form action="/bills/add" method="POST">
+                    <div class="form-group">
+                        <label for="customer_id">Mã khách hàng</label>
+                        <select id="customer_id" name="customer_id" required onchange="updateCustomerDetails(this)">
+                            <option value="">Chọn khách hàng</option>
+                            <% customers.forEach(customer => { %>
+                                <option value="<%= customer.id %>" data-name="<%= customer.name %>" data-phone="<%= customer.phone %>" data-address="<%= customer.address %>"><%= customer.id %> - <%= customer.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="receiver_name">Tên người nhận</label>
+                        <input type="text" id="receiver_name" name="receiver_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="receiver_phone">SĐT</label>
+                        <input type="text" id="receiver_phone" name="receiver_phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="receiver_address">Địa chỉ</label>
+                        <input type="text" id="receiver_address" name="receiver_address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="note">Ghi chú</label>
+                        <textarea id="note" name="note"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Trạng thái</label>
+                        <select id="status" name="status">
+                            <option value="0">Chờ duyệt</option>
+                            <option value="1">Đã duyệt</option>
+                            <option value="-1">Đã hủy</option>
+                        </select>
+                    </div>
+                    <div class="form-group table-form-group">
+                        <label for="products">Sản phẩm</label>
+                        <div class="table-responsive">
+                            <table class="table-form">
+                                <thead>
+                                    <tr>
+                                        <th class="table-form-thead">Sản phẩm</th>
+                                        <th class="table-form-thead">Số lượng</th>
+                                        <th class="table-form-thead">Giá</th>
+                                        <th class="table-form-thead">Tổng</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="product-list">
+                                    <tr>
+                                        <td class="table-form-item">
+                                            <select name="products[0][id]" required onchange="updatePrice(this)">
+                                                <% products.forEach(product => { %>
+                                                    <option value="<%= product.id %>" data-price="<%= product.price %>"><%= product.name %></option>
+                                                <% }) %>
+                                            </select>
+                                        </td>
+                                        <td class="table-form-item">
+                                            <input type="number" name="products[0][quantity]" required oninput="updateTotal(this)">
+                                        </td>
+                                        <td class="table-form-item">
+                                            <input type="number" name="products[0][price]" required readonly>
+                                        </td>
+                                        <td class="table-form-item">
+                                            <input type="number" name="products[0][total]" required readonly>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" onclick="addProductRow()">Thêm sản phẩm</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="total_price">Tổng tiền</label>
+                        <input type="number" id="total_price" name="total_price" required readonly>
+                    </div>
+                    <button type="submit">Tạo hóa đơn</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let productIndex = 1;
+
+        function addProductRow() {
+            const productList = document.getElementById('product-list');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td class="table-form-item">
+                    <select name="products[${productIndex}][id]" required onchange="updatePrice(this)">
+                        <% products.forEach(product => { %>
+                            <option value="<%= product.id %>" data-price="<%= product.price %>"><%= product.name %></option>
+                        <% }) %>
+                    </select>
+                </td>
+                <td class="table-form-item">
+                    <input type="number" name="products[${productIndex}][quantity]" required oninput="updateTotal(this)">
+                </td>
+                <td class="table-form-item">
+                    <input type="number" name="products[${productIndex}][price]" required readonly>
+                </td>
+                <td class="table-form-item">
+                    <input type="number" name="products[${productIndex}][total]" required readonly>
+                </td>
+            `;
+            productList.appendChild(newRow);
+            productIndex++;
+        }
+
+        function updatePrice(selectElement) {
+            const price = selectElement.options[selectElement.selectedIndex].getAttribute('data-price');
+            const row = selectElement.closest('tr');
+            row.querySelector('input[name$="[price]"]').value = price;
+            updateTotal(row.querySelector('input[name$="[quantity]"]'));
+        }
+
+        function updateTotal(quantityInput) {
+            const row = quantityInput.closest('tr');
+            const price = row.querySelector('input[name$="[price]"]').value;
+            const total = quantityInput.value * price;
+            row.querySelector('input[name$="[total]"]').value = total;
+            updateGrandTotal();
+        }
+
+        function updateGrandTotal() {
+            let grandTotal = 0;
+            document.querySelectorAll('input[name$="[total]"]').forEach(input => {
+                grandTotal += parseFloat(input.value) || 0;
+            });
+            document.getElementById('total_price').value = grandTotal;
+        }
+
+        function updateCustomerDetails(selectElement) {
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            const name = selectedOption.getAttribute('data-name') || '';
+            const phone = selectedOption.getAttribute('data-phone') || '';
+            const address = selectedOption.getAttribute('data-address') || '';
+
+            document.getElementById('receiver_name').value = name;
+            document.getElementById('receiver_phone').value = phone;
+            document.getElementById('receiver_address').value = address;
+        }
+    </script>
+</body>
+</html>

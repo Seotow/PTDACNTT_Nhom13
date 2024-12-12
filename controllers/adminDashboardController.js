@@ -1,7 +1,8 @@
-const productModel = require('../models/productModel')
-const categoryModel = require('../models/categoryModel')
-const staffModel = require('../models/staffModel')
+const productModel = require('../models/productModel');
+const categoryModel = require('../models/categoryModel');
+const staffModel = require('../models/staffModel');
 const billModel = require('../models/billModel');
+const customerModel = require('../models/customerModel');
 
 const fs = require('fs')
 const multer = require('multer');
@@ -342,7 +343,97 @@ const cancelBill = (req, res) => {
     });
 };
 
+// Hiển thị danh sách khách hàng
+const showCustomers = (req, res) => {
+    customerModel.getAllCustomers((err, customers) => {
+        if (err) return res.status(500).send('Lỗi kết nối cơ sở dữ liệu');
+        res.render('admin/customers/index', { customers });
+    });
+};
 
+// Hiển thị form thêm khách hàng
+const getAddCustomerForm = (req, res) => {
+    res.render('admin/customers/addCustomer');
+};
+
+// Thêm khách hàng
+const addCustomer = (req, res) => {
+    const { name, gender, birthdate, phone, email, address } = req.body;
+
+    // Chuyển gender thành số nguyên
+    const genderValue = gender == "Nam" ? 1 : 0;
+
+    customerModel.addCustomer({ name, gender: genderValue, birthdate, phone, email, address }, (err) => {
+        if (err) return res.status(500).send('Lỗi khi thêm khách hàng');
+        res.redirect('/customers');
+    });
+};
+
+// Hiển thị form sửa thông tin khách hàng
+const showEditCustomerForm = (req, res) => {
+    const { id } = req.params;
+    customerModel.getCustomerById(id, (err, customer) => {
+        if (err) return res.status(500).send('Lỗi khi lấy thông tin khách hàng');
+        if (!customer) return res.status(404).send('Khách hàng không tồn tại');
+        res.render('admin/customers/editCustomer', { customer });
+    });
+};
+
+// Cập nhật thông tin khách hàng
+const editCustomer = (req, res) => {
+    const { id } = req.params;
+    const { name, gender, birthdate, phone, email, address } = req.body;
+
+    // Chuyển gender thành số nguyên
+    const genderValue = gender == "Nam" ? 1 : 0;
+    
+
+    customerModel.updateCustomer(id, { name, gender: genderValue, birthdate, phone, email, address }, (err) => {
+        if (err) return res.status(500).send('Lỗi khi cập nhật thông tin khách hàng');
+        res.redirect('/customers');
+    });
+};
+
+// Xóa khách hàng
+const deleteCustomer = (req, res) => {
+    const { id } = req.params;
+    customerModel.deleteCustomer(id, (err) => {
+        if (err) return res.status(500).send('Lỗi khi xóa khách hàng');
+        res.redirect('/customers');
+    });
+};
+
+// Hiển thị form thêm hóa đơn
+const getAddBillForm = (req, res) => {
+    productModel.getAllProducts((err, products) => {
+        if (err) return res.status(500).send('Lỗi khi lấy danh sách sản phẩm');
+        customerModel.getAllCustomers((err, customers) => {
+            if (err) return res.status(500).send('Lỗi khi lấy danh sách khách hàng');
+            res.render('admin/bills/addBill', { products, customers });
+        });
+    });
+};
+
+const addBill = (req, res) => {
+    const { customer_id, receiver_name, receiver_phone, receiver_address, note, status, total_price, products } = req.body;
+    const created_at = new Date();
+    const statusInt = (status == "Chờ duyệt" ? 0 : 1);
+    billModel.createBill({ customer_id, receiver_name, receiver_phone, receiver_address, note, created_at, status: statusInt, total_price }, (err, billId) => {
+        if (err) return res.status(500).send('Lỗi khi thêm hóa đơn');
+        res.redirect('/bills');
+        return;
+        const details = products.map(product => ({
+            bill_id: billId,
+            product_id: product.id,
+            quantity: product.quantity
+        }));
+
+        billModel.createBillDetails(details, (err) => {
+            if (err) return res.status(500).send('Lỗi khi thêm chi tiết hóa đơn');
+            res.redirect('/bills');
+        });
+    });
+};
 
 // Xuất các hàm cho sử dụng trong các tệp khác
 module.exports = {
@@ -369,7 +460,15 @@ module.exports = {
     showBills,
     showBillDetails,
     approveBill,
-    cancelBill 
+    cancelBill,
+    showCustomers,
+    getAddCustomerForm,
+    addCustomer,
+    showEditCustomerForm,
+    editCustomer,
+    deleteCustomer,
+    getAddBillForm,
+    addBill
 };
 
 

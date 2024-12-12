@@ -5,6 +5,7 @@ const adminDashboardController = require('../controllers/adminDashboardControlle
 const productController = require('../controllers/productController');
 const staffController = require('../controllers/staffController');
 const billController = require('../controllers/billController'); 
+const customerController = require('../controllers/adminDashboardController');
 
 //Middleware
 function checkSession(req, res, next) {
@@ -48,9 +49,18 @@ router.post('/categories/delete/:id', adminDashboardController.deleteCategory);
 
 // Admin bill management (Quản lý đơn hàng)
 router.get('/bills', adminDashboardController.showBills);
+router.get('/bills/add', adminDashboardController.getAddBillForm);
+router.post('/bills/add', adminDashboardController.addBill);
 router.get('/bills/:id', adminDashboardController.showBillDetails);
 router.get('/bills/details/:id', adminDashboardController.showBillDetails);
 router.post('/bills/approve/:id', adminDashboardController.approveBill);
 router.post('/bills/cancel/:id', adminDashboardController.cancelBill);
 
+// Admin customer management
+router.get('/customers', adminDashboardController.showCustomers);
+router.get('/customers/add', adminDashboardController.getAddCustomerForm);
+router.post('/customers/add', adminDashboardController.addCustomer);
+router.get('/customers/edit/:id', adminDashboardController.showEditCustomerForm);
+router.post('/customers/edit/:id', adminDashboardController.editCustomer);
+router.post('/customers/delete/:id', adminDashboardController.deleteCustomer);
 module.exports = router;
