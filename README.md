@@ -46,7 +46,7 @@ Hệ thống quản lý cửa hàng Apple Store giúp tối ưu hóa các quy tr
 - **Phần cứng**:
   - CPU: Intel Core i3 hoặc AMD Ryzen 3
   - RAM: 8 GB
-  - Ổ cứng: SSD (tối thiểu 256 GB)
+  - Ổ cứng: SSD (tối thiểu 1 GB)
 - **Phần mềm**:
   - Hệ điều hành: Windows 10 (64-bit)
   - Node.js v18.x
@@ -89,12 +89,12 @@ Hệ thống quản lý cửa hàng Apple Store giúp tối ưu hóa các quy tr
    - Thực hiện các bước sau để thiết lập cơ sở dữ liệu:  
      1. **Tạo cơ sở dữ liệu mới**:
         - Nhấn **New** trong menu bên trái.
-        - Nhập tên cơ sở dữ liệu, ví dụ: `apple_store`.
+        - Nhập tên cơ sở dữ liệu: `nhom13`.
         - Chọn **Collation** là `utf8_general_ci` và nhấn **Create**.
      2. **Import tệp dữ liệu**:
         - Chọn cơ sở dữ liệu vừa tạo trong danh sách bên trái.
         - Nhấn tab **Import**.
-        - Nhấn nút **Choose File**, chọn tệp `schema.sql` từ thư mục `/database` trong dự án.
+        - Nhấn nút **Choose File**, chọn tệp `nhom13.sql` từ thư mục `/database` trong dự án.
         - Nhấn **Go** để bắt đầu import. Sau khi hoàn tất, các bảng sẽ xuất hiện trong cơ sở dữ liệu.
      3. **Tạo tài khoản admin mặc định**:
         - Truy cập tab **SQL** trong PHPMyAdmin.
